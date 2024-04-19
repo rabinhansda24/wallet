@@ -28,6 +28,8 @@ async def get_wallet_route(user_id: int, wallet_type: str):
     try:
        
         wallet, message = await get_wallet(user_id, wallet_type)
+        if not wallet:
+            return do_response(404, message)
         return do_response(200, message, wallet.serialize())
     except Exception as e:
         return do_response(500, str(e))
