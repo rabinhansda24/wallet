@@ -3,10 +3,11 @@ import os
 from app.db import db
 from app.models.wallet_model import WalletModel
 from app.models.transaction_model import TransactionModel
+from app.libs.queue.task_processor import add_transaction_to_queue
 
 MINIMUM_BALANCE = os.getenv('MINIMUM_BALANCE', 0.0)
 
-async def create_transaction(user_id: int, wallet_id: int, amount: float, is_credit: bool) -> TransactionModel:
+def create_transaction(user_id: int, wallet_id: int, amount: float, is_credit: bool):
     """ Create a transaction for a wallet. """
 
     try:
@@ -29,6 +30,10 @@ async def create_transaction(user_id: int, wallet_id: int, amount: float, is_cre
         return transaction, "Transaction created successfully"
     except Exception as e:
         return None, str(e)
+    
+def process_transaction(user_id: int, wallet_id: int, amount: float, is_credit: bool):
+    add_transaction_to_queue(create_transaction, user_id, wallet_id, amount, is_credit)
+    return True, "Your transaction is being processed. Please check back later for the status."
     
 
 async def get_transactions(user_id: int, wallet_id: int) -> list:

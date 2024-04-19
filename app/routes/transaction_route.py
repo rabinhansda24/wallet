@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from datetime import datetime
 
 from app.libs.libs import do_response
-from app.controllers.transaction_controller import create_transaction, get_transactions, get_transaction_total_in_period
+from app.controllers.transaction_controller import get_transactions, get_transaction_total_in_period, process_transaction
 
 
 transaction_route = Blueprint('transaction', __name__)
@@ -18,11 +18,11 @@ async def create_transaction_route():
         amount = data.get('amount')
         is_credit = data.get('is_credit')
 
-        transaction, message = await create_transaction(user_id, wallet_id, amount, is_credit)
+        transaction, message = process_transaction(user_id, wallet_id, amount, is_credit)
         print(transaction)
         if transaction is None:
             return do_response(400, message)
-        return do_response(201, message, transaction.serialize())
+        return do_response(201, message)
     except Exception as e:
         return do_response(500, str(e))
     
