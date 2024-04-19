@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 
 from app.libs.libs import do_response
-from app.controllers.wallet_controller import create_wallet, get_wallet
+from app.controllers.wallet_controller import create_wallet, get_wallet, get_wallets
 
 
 wallet_route = Blueprint('wallet', __name__)
@@ -31,5 +31,27 @@ async def get_wallet_route(user_id: int, wallet_type: str):
         if not wallet:
             return do_response(404, message)
         return do_response(200, message, wallet.serialize())
+    except Exception as e:
+        return do_response(500, str(e))
+    
+@wallet_route.route('/get/<user_id>', methods=['GET'])
+async def get_wallets_route(user_id: int):
+    """ Get all wallets for a user. """
+    try:
+        wallets, message = await get_wallets(user_id)
+        if not wallets:
+            return do_response(404, message)
+        return do_response(200, message, wallets)
+    except Exception as e:
+        return do_response(500, str(e))
+
+@wallet_route.route('/get_all_wallet', methods=['GET'])
+async def get_wallets_route():
+    """ Get all wallets. """
+    try:
+        wallets, message = await get_wallets()
+        if not wallets:
+            return do_response(404, message)
+        return do_response(200, message, wallets)
     except Exception as e:
         return do_response(500, str(e))
