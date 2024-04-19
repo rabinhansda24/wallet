@@ -1,7 +1,9 @@
+import os
 from app.db import db
 from app.models.wallet_model import WalletModel
 from app.models.transaction_model import TransactionModel
 
+MINIMUM_BALANCE = os.getenv('MINIMUM_BALANCE', 0.0)
 
 async def create_transaction(user_id: int, wallet_id: int, amount: float, is_credit: bool) -> TransactionModel:
     """ Create a transaction for a wallet. """
@@ -14,7 +16,8 @@ async def create_transaction(user_id: int, wallet_id: int, amount: float, is_cre
         if is_credit:
             wallet.balance += amount
         else:
-            if wallet.balance < amount:
+            print(f"MINIMUM_BALANCE: {MINIMUM_BALANCE}")
+            if (wallet.balance - amount < int(MINIMUM_BALANCE)):
                 return None, "Insufficient balance"
             wallet.balance -= amount
 

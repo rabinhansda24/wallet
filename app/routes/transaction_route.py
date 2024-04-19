@@ -19,6 +19,8 @@ async def create_transaction_route():
 
         transaction, message = await create_transaction(user_id, wallet_id, amount, is_credit)
         print(transaction)
+        if transaction is None:
+            return do_response(400, message)
         return do_response(201, message, transaction.serialize())
     except Exception as e:
         return do_response(500, str(e))
