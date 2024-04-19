@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 from app.db import db
 from app.models.wallet_model import WalletModel
@@ -35,3 +36,16 @@ async def get_transactions(user_id: int, wallet_id: int) -> list:
 
     transactions = TransactionModel.query.filter_by(user=user_id, wallet=wallet_id).all()
     return [transaction.serialize() for transaction in transactions], "Transactions found"
+
+
+async def get_transaction_total_in_period(user_id: int, wallet_id: int, start_date: datetime, end_date: datetime) -> dict:
+    """ Get the total amount of transactions in a period. """
+    try:
+        transaction_info = TransactionModel.transaction_total_in_period(user_id, wallet_id, start_date, end_date)
+
+        if not transaction_info:
+            return None, "No transactions found"
+        
+        return transaction_info, "Transactions found"
+    except Exception as e:
+        return None, str(e)
