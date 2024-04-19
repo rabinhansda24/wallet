@@ -3,6 +3,7 @@ from flask import Flask
 from app.db import db
 from app.routes.hello_route import hello_route
 from app.routes.user_route import user_route
+from app.routes.wallet_route import wallet_route
 
 
 
@@ -11,6 +12,7 @@ def initialize_routes(app: Flask):
 
     app.register_blueprint(hello_route)
     app.register_blueprint(user_route, url_prefix='/api/v1/users')
+    app.register_blueprint(wallet_route, url_prefix='/api/v1/wallet')
 
 
 def initialize_database(app: Flask):
