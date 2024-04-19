@@ -25,6 +25,6 @@ class TransactionModel(db.Model):
             'user': self.user,
             'wallet': self.wallet,
             'amount': self.amount,
-            'type': self.type,
+            'is_credit': self.is_credit,
             'created_at': self.created_at
         }
