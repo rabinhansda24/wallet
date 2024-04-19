@@ -16,6 +16,8 @@ async def create_wallet_route():
         wallet_type = data.get('type')
 
         wallet, message = await create_wallet(user_id, wallet_type)
+        if not wallet:
+            return do_response(400, message)
         return do_response(201, message, wallet.serialize())
     except Exception as e:
         return do_response(500, str(e))
