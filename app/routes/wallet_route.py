@@ -35,7 +35,7 @@ async def get_wallet_route(user_id: int, wallet_type: str):
         return do_response(500, str(e))
     
 @wallet_route.route('/get/<user_id>', methods=['GET'])
-async def get_wallets_route(user_id: int):
+async def get_wallets_route_user(user_id: int):
     """ Get all wallets for a user. """
     try:
         wallets, message = await get_wallets(user_id)
