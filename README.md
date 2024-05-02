@@ -57,6 +57,7 @@ docker run -p 5000:5000 wallet-app
 - **Registration:** Users must first register in the system.
 - **Wallet Creation:** After registration, a wallet is created for the user. Each user can have only one wallet of each type.
 - **Transactions:** Users can perform credit or debit transactions, view balances, and see total transactions over a specified period.
+- **Thought process behind the Queue:** If we have multiple process trying to write to a wallet transaction, we might have race condition, we might have inaccurate wallet balance. If we have a queue to process the transaction then we can write to transaction table as the request were made. So whenever a transaction request comes credit/debit it is pushed to a queue. `add_transaction_to_queue` function takes a function and other parameters, here `create_transaction` function is being passed. The queue is alawys looking if there is any item present, this is initialized with a background thread started when the app is created and started.
 
 ## API Endpoints
 
